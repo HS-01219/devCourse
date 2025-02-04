@@ -1,0 +1,71 @@
+/* 내가 작성한 코드 */
+h1 {
+    text-align: center;
+}
+
+.title_div {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 50px;
+}
+
+.card {
+    text-align: center;
+}
+
+.card_img {
+    width: 300px;
+    height: 300px;
+}
+
+/* title과 button은 강사님 코드에서 가져옴 */
+.card_title {
+    font-size: 20px;
+}
+
+.card_button {
+    font-size: 25px;
+    width: 150px;
+    height: 30px;
+}
+
+
+/* 강사님 코드
+h1 {
+    text-align: center;
+}
+
+.title_div {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.flex {
+    display : grid;
+    grid-template-columns : 1fr 1fr 1fr;
+}
+
+.card {
+    text-align: center;
+}
+
+.card_title {
+    font-size: 20px;
+}
+
+.card_img {
+    width: 300px;
+    height: 300px;
+}
+
+.card_button {
+    font-size: 25px;
+    width: 150px;
+    height: 30px;
+}
+ */
