@@ -71,7 +71,7 @@ function order(response, productId) {
     mariadb.query('insert into orderlist values (' + productId + ', "'+ new Date().toLocaleDateString() +'");', function(err, rows){
         console.log(rows);
     });
-    response.write('order page');
+    response.write(main_view);
     response.end();
 }
 
