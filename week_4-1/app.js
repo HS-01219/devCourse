@@ -11,8 +11,9 @@ app.get('/', (req, res) => {
 app.use(express.json());
 app.post('/test', (req, res) => {
   // body 에 숨겨져서 들어온 데이터를 화면에 뿌려주기
-  res.send(req.body.message);
-  // res.json(req.body)
+  // express.json()으로 인해 req.body의 형태는 { message : "메세지" }
+  res.send(req.body.message); // response : "메세지" body에 출력
+  // res.json(req.body)       // response : { "message" : "메세지" } 
 });
 
 app.listen(port, () => {
