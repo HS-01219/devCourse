@@ -79,7 +79,95 @@ app.post("/youtubers", (req, res) => {
 });
 
 app.get("/youtubers", (req, res) => {
-    res.json(db)
     // map도 key-value 형태이지만 map은 json이 아니다.
-    // 추후 수정
+    // res.json(db) // 1 => { chnnelTitle : '뚠뚠', sub : '593만명', videoNum : '993개' }
+    // console.log(db.values()) // [Map Iterator] { { chnnelTitle : '뚠뚠', sub : '593만명', videoNum : '993개' } }
+    
+    // 변수가 담고 있는 데이터 형태를 변수 이름에 담지는 말자.
+    let youtubers = {};
+
+    if(db.size > 0){
+        // forEach 는 index값 없이 순서대로 순회할 수 있음
+        db.forEach((youtuber, idx) => {
+            youtubers[idx] = youtuber;
+        });
+
+        // JSON.stringify : JSON 형태를 문자열로 표현하기 위해 개행 등을 넣어줌
+        res.json(youtubers);
+    } else{
+        res.json({
+            message : "현재 유튜버가 없습니다."
+        });
+    }
+});
+
+app.delete("/youtubers/:id", (req, res) => {
+    var msg = "";
+    let {id} = req.params;
+    id = parseInt(id);
+
+    const youtuber = db.get(id);
+
+    if(youtuber == undefined) {
+        msg = `요청하신 ${id}번은 없는 유튜버입니다.`;
+    } else{
+        const youtuberNm = youtuber.channelTitle;
+        db.delete(id);
+
+        // 제대로 삭제되었는지 확인하기 위해 다음 과정을 추가
+        // (현재는 map 하나를 delete한거지만 실제 db연결 시 delete 쿼리를 돌려야 할 것 -> 에러 발생 가능성 있음)
+        // 이때 youtuber는 이전 객체가 담겨있기 때문에 새로 get해준다.
+        if(db.get(id) == undefined) {
+            msg = `${youtuberNm}님, 유튜버 생활을 청산하셨군요. 안녕히가세요.`;
+        } else{
+            msg = `삭제 중 오류가 발생했습니다.`;
+        }
+    }
+    res.json({
+        message : msg
+    });
+});
+
+app.delete("/youtubers", (req, res) => {
+    var msg = "";
+    if(db.size > 0){
+        db.clear();
+        // (현재는 map을 clear한거지만 실제 db연결 시 delete 쿼리를 돌려야 할 것 -> 에러 발생 가능성 있음)
+        if(db.size == 0){
+            msg = "전체 유튜버가 삭제되었습니다.";
+        } else {
+            msg = "삭제 중 오류가 발생했습니다.";
+        }
+    } else {
+        msg = "삭제할 유튜버가 없습니다.";
+    }
+
+    res.json({
+        message : msg
+    });
+});
+
+app.put("/youtubers/:id", (req, res) => {
+    let {id} = req.params;
+    id = parseInt(id);
+
+    // 다른 블록에서 변경되어야 하는 객체라 var 선언
+    var youtuber = db.get(id);
+
+    if(youtuber == undefined){
+        msg = `요청하신 ${id}번은 없는 유튜버입니다.`;
+    } else {
+        // youtuber 객체가 있을 때만 가져올 수 있는 데이터이기 때문에 else 안에 작성
+        const oldTitle = youtuber.channelTitle;
+        const newTitle = req.body.channelTitle;
+
+        // youtuber.channelTitle = newTitle;
+        youtuber["channelTitle"] = newTitle;
+        db.set(id, youtuber);
+        msg = `${oldTitle}님, 채널명이 ${newTitle}로 변경되었습니다.`;
+    }
+
+    res.json({
+        message : msg
+    });
 });
