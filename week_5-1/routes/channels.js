@@ -1,36 +1,41 @@
 // express 모듈 세팅
 const express = require("express");
-const app = express();
+const router = express.Router();
 
-app.use(express.json());
-app.listen(3000);
+router.use(express.json());
 
 let db = new Map();
 var id = 1;
 
 // 채널 개별 생성, 전체 조회
-app.route("/channels")
+router.route("/")
     .get((req, res) => {
-        var channels = [];
-
-        if(db.size){
+        const {userId} = req.body;
+        let channels = [];
+        
+        // userId가 body에 없을 경우 예외처리
+        if(db.size && userId){
             db.forEach((channel, idx) => {
-                channels.push(channel)
+                if(channel.userId === userId){
+                    channels.push(channel)
+                }
             });
-    
-            res.status(200).json(channels);
+
+            if(channels.length){
+                res.status(200).json(channels);
+            } else {
+                notFoundChannel(res);
+            }
         } else{
-            res.status(404).json({
-                message : "현재 채널이 없습니다."
-            });
+            notFoundChannel(res);
         }
     })
     .post((req, res) => {
         var status = 201;
         var msg = "";
-        const {channelTitle} = req.body;
+        const {channelTitle, userId} = req.body;
 
-        if(channelTitle){
+        if(channelTitle && userId){
             const currentId = id;
             db.set(id++, req.body);
 
@@ -51,7 +56,7 @@ app.route("/channels")
     })
 
 // 채널 개별 조회, 수정, 삭제
-app.route("/channels/:id")
+router.route("/:id")
     .get((req, res) => {
         let {id} = req.params;
         id = parseInt(id);
@@ -60,15 +65,10 @@ app.route("/channels/:id")
         if(channel){
             res.status(200).json(channel);
         } else {
-            res.status(404).json({
-                message : "채널 정보를 찾을 수 없습니다."
-            });
+            notFoundChannel(res);
         }
     })
     .put((req, res) => {
-        var msg = "";
-        var status = 200;
-
         let {id} = req.params;
         id = parseInt(id);
 
@@ -80,15 +80,14 @@ app.route("/channels/:id")
 
             channel.channelTitle = newTitle;
             db.set(id, channel);
-            msg = `채널명이 [${oldTitle}]에서 [${newTitle}]로 변경되었습니다.`;
+            
+            res.status(200).json({
+                message : `채널명이 [${oldTitle}]에서 [${newTitle}]로 변경되었습니다.`
+            });
         } else {
-            status = 404;
-            msg = `채널 정보를 찾을 수 없습니다.`;
+            notFoundChannel(res);
         }
 
-        res.status(status).json({
-            message : msg
-        });
     })
     .delete((req, res) => {
         var msg = "";
@@ -115,3 +114,11 @@ app.route("/channels/:id")
             message : msg
         });
     });
+
+function notFoundChannel(res) {
+    res.status(404).json({
+        message : `채널 정보를 찾을 수 없습니다.`
+    });
+}
+
+module.exports = router;

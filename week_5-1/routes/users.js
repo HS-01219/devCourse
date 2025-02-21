@@ -1,15 +1,13 @@
 // express 모듈 세팅
 const express = require("express");
-const app = express();
+const router = express.Router();
 
-app.use(express.json());
-app.listen(3000);
+router.use(express.json());
 
 let db = new Map();
-var id = 1; // 하나의 객체를 유니크하게 구별하기 위함
 
 // 로그인
-app.post("/login", (req, res) => {
+router.post("/login", (req, res) => {
     var status = 200;
     var msg = "";
     const {userId, pwd} = req.body;
@@ -41,7 +39,7 @@ app.post("/login", (req, res) => {
 });
 
 // 회원가입
-app.post("/join", (req, res) => {
+router.post("/join", (req, res) => {
     var status = 201;
     var msg = "";
     const {userId, name, pwd} = req.body;
@@ -50,11 +48,12 @@ app.post("/join", (req, res) => {
     // 값이 세개 다 존재할 때만 실행
     // 화면이 존재한다면 거기서 먼저 return시켜주는 것이 좋을 것 같다.
     if(userId && name && pwd) {
-        const currentId = id;
-        db.set(id++, req.body);
+        const {userId} = req.body;
+        db.set(userId, req.body);
+
         
-        if(db.get(currentId)){
-            msg = `${db.get(currentId).name}님, 환영합니다.`;
+        if(db.get(userId)){
+            msg = `${db.get(userId).name}님, 환영합니다.`;
         } else {
             status = 500;
             msg = `회원가입 중 오류가 발생했습니다.`
@@ -70,12 +69,11 @@ app.post("/join", (req, res) => {
 });
 
 // url이 중복될 경우 route를 이용하면 분기시켜줄 수 있다.
-app.route("/users/:id")
+router.route("/users")
     .get((req, res) => {
-        let {id} = req.params;
-        id = parseInt(id);
+        let {userId} = req.body;
     
-        const user = db.get(id);
+        const user = db.get(userId);
         if(user) {
             res.status(200).json({
                 userId : user.userId,
@@ -90,13 +88,12 @@ app.route("/users/:id")
     .delete((req, res) => {
         var msg = "";
         var status = 200;
-        let {id} = req.params;
-        id = parseInt(id);
+        let {userId} = req.body;
     
-        const user = db.get(id);
+        const user = db.get(userId);
         if(user) {
-            db.delete(id);
-            if(db.get(id) == undefined) {
+            db.delete(userId);
+            if(!db.get(userId)) {
                 msg = `${user.name}님, 다음에 또 뵙겠습니다.`;
             } else{
                 status = 500;
@@ -142,3 +139,5 @@ function matchPwd(user, pwd) {
         return { msg : `비밀번호를 다시 확인해주세요.`, status : 400 };
     }
 }
+
+module.exports = router;
