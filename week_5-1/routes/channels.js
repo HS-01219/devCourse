@@ -1,6 +1,6 @@
-// express 모듈 세팅
 const express = require("express");
 const router = express.Router();
+const conn = require("../mariadb");
 
 router.use(express.json());
 
@@ -11,49 +11,51 @@ var id = 1;
 router.route("/")
     .get((req, res) => {
         const {userId} = req.body;
-        let channels = [];
-        
-        // userId가 body에 없을 경우 예외처리
-        if(db.size && userId){
-            db.forEach((channel, idx) => {
-                if(channel.userId === userId){
-                    channels.push(channel)
-                }
-            });
 
-            if(channels.length){
-                res.status(200).json(channels);
-            } else {
-                notFoundChannel(res);
-            }
-        } else{
-            notFoundChannel(res);
+        // 단축평가 - userId가 있을 때만 뒤의 내용을 실행
+        // userId && _____
+        if(userId){
+            const sql = `SELECT * FROM channels WHERE user_id = ?`;
+            conn.query(
+                sql, [userId], function(err, results) {
+                    if(results.length) {
+                        res.status(200).json(results);
+                    } else {
+                        notFoundChannel(res);
+                    }
+                }
+            );
+        } else {
+            // 값을 보내지 않고 끝낼 때 end()를 사용
+            res.status(400).end();
         }
     })
     .post((req, res) => {
-        var status = 201;
-        var msg = "";
-        const {channelTitle, userId} = req.body;
-
-        if(channelTitle && userId){
-            const currentId = id;
-            db.set(id++, req.body);
-
-            if(db.get(currentId)){
-                msg = `${db.get(currentId).channelTitle}님, 채널을 응원합니다!`;
-            } else {
-                status = 500;
-                msg = `채널 생성 중 오류가 발생했습니다.`
-            }
+        const {name, userId} = req.body;
+        // 데이터가 있어도 형식이 맞지 않으면 오류가 발생할 수 있음
+        // 유효성 검사를 통해 해결해야한다.
+        if(name && userId){
+            const sql = `INSERT INTO channels (name, user_id) VALUES (?, ?)`;
+            const values = [name, userId];
+            conn.query(
+                sql, values, function(err) {
+                    if(err) {
+                        res.status(500).json({
+                            message : `채널 생성 중 오류가 발생했습니다.`
+                        });
+                    } else {
+                        res.status(201).json({
+                            message : `${name}님, 채널을 응원합니다!`
+                        });
+                    }
+                }
+            );
         } else {
-            status = 400;
-            msg = `입력 값을 다시 확인해주세요.`    
+            res.status(400).json({
+                message : `입력 값을 다시 확인해주세요.`
+            });
         }
-
-        res.status(status).json({
-            message : msg
-        })
-    })
+    });
 
 // 채널 개별 조회, 수정, 삭제
 router.route("/:id")
@@ -61,12 +63,16 @@ router.route("/:id")
         let {id} = req.params;
         id = parseInt(id);
 
-        const channel = db.get(id);
-        if(channel){
-            res.status(200).json(channel);
-        } else {
-            notFoundChannel(res);
-        }
+        const sql = `SELECT * FROM channels WHERE id = ?`;
+        conn.query(
+            sql, [id], function(err, results) {
+                if(results.length) {
+                    res.status(200).json(results);
+                } else {
+                    notFoundChannel(res);
+                }
+            }
+        );
     })
     .put((req, res) => {
         let {id} = req.params;
