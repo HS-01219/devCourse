@@ -10,14 +10,14 @@ router.use(express.json());
 const errorValidate = (req, res, next) => {
     // 유효성 검사 결과 확인
     const error = validationResult(req);
-    if(!error.isEmpty()) {
+    if(error.isEmpty()) {
+        return next(); // 다음 할 일을 찾아가렴 (배열에 있는 다음 미들웨어 또는 콜백 함수)
+    } else {
         // 값을 보내지 않고 끝낼 때 end()를 사용
         // res.status(400).end();
 
         // return을 이용하여 하단의 코드를 실행하지 않고 바로 종료
         return res.status(400).json(error.array());
-    } else {
-        return next(); // 다음 할 일을 찾아가렴 (배열에 있는 다음 미들웨어 또는 콜백 함수)
     }
 }
 
