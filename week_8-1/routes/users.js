@@ -1,20 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
-router.post('/join', (req, res) => {
-    res.send('Hello World!');
-});
+const { join, login, requestReset, passwordReset } = require("../controller/UserController");
 
-router.post('/login', (req, res) => {
-    res.send('Hello World!');
-});
-
-router.post('/reset', (req, res) => {
-    res.send('Hello World!');
-});
-
-router.put('/reset', (req, res) => {
-    res.send('Hello World!');
-});
+router.post('/join', join);
+router.post('/login', login);
+router.post('/reset', requestReset);
+router.put('/reset', passwordReset);
 
 module.exports = router;
