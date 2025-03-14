@@ -1,13 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const { addLike, removeLike } = require("../controller/LikeController");
 
 
 router.route('/:bookId')
-    .post((req, res) => {
-        res.send('Hello World!');
-    })
-    .delete((req, res) => {
-        res.send('Hello World!');
-    });
+    .post(addLike)
+    .delete(removeLike);
 
 module.exports = router;

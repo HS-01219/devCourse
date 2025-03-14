@@ -6,7 +6,10 @@ const allBooks = (req, res) => {
     const { category_id, news, limit, currentPage } = req.query;
     const offset = limit * (currentPage - 1);
 
-    let sql = `SELECT * FROM books WHERE 1 = 1`;
+    let sql = `SELECT *, 
+                    (SELECT COUNT(*) FROM likes 
+                     WHERE likes.liked_book_id = books.id) AS likes 
+               FROM books WHERE 1 = 1`;
     let values = [];
 
     if(category_id) {
@@ -33,10 +36,16 @@ const allBooks = (req, res) => {
 }
 
 const bookDetail = (req, res) => {
-    const id = parseInt(req.params.id);
+    const bookId = parseInt(req.params.id);
+    const {userId} = req.body;
+    const values = [userId, bookId];
 
-    const sql = `SELECT * FROM books LEFT JOIN category ON books.category_id = category.id WHERE books.id = ?`;
-    conn.query(sql, id, function(err, results) {
+    const sql = `SELECT B.*, C.name AS category_name,
+                    (SELECT COUNT(*) FROM likes 
+                     WHERE likes.liked_book_id = B.id) AS likes,
+                    (SELECT COUNT(*) FROM likes WHERE user_id = ? AND likes.liked_book_id = B.id) AS liked
+                 FROM books B LEFT JOIN category C ON B.category_id = C.id WHERE B.id = ?`;
+    conn.query(sql, values, function(err, results) {
         if(err) {
             console.log(err);
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message : `책 정보 조회 중 오류가 발생했습니다.` });
