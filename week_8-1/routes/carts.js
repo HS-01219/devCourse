@@ -1,20 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const { addToCart, getCartItems, removeCartItem } = require('../controller/CartController');
 
 router.route('/')
-    .get((req, res) => {
-        res.send('Hello World!');
-    })
-    .post((req, res) => {
-        res.send('Hello World!');
-    });
+    .get(getCartItems)
+    .post(addToCart);
 
-router.delete('/:bookId', (req, res) => {
-    res.send('Hello World!');
-});
-
-// router.get('/carts', (req, res) => {
-//     res.send('Hello World!');
-// });
+router.delete('/:id', removeCartItem);
 
 module.exports = router;
