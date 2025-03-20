@@ -1,16 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-router.route('/')
-    .get((req, res) => {
-        res.send('Hello World!');
-    })
-    .post((req, res) => {
-        res.send('Hello World!');
-    });
+const { order, getOrders, getOrderDetail } = require('../controller/OrderController');
 
-router.get('/:orderId', (req, res) => {
-    res.send('Hello World!');
-});
+router.route('/')
+    .get(getOrders)
+    .post(order);
+
+router.get('/:id', getOrderDetail);
 
 module.exports = router;
