@@ -19,7 +19,12 @@ const join = (req, res) => {
                 console.log(err)
                 return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message : `회원가입 중 오류가 발생했습니다.` });
             }
-            return res.status(StatusCodes.CREATED).json(result);
+
+            if(result.affectedRows){
+                return res.status(StatusCodes.CREATED).json(result);
+            } else {
+                return res.status(StatusCodes.BAD_REQUEST).end();
+            }
         }
     );
 }

@@ -1,8 +1,7 @@
 const conn = require("../mariadb");
 const { StatusCodes } = require("http-status-codes");
+const ensureAuthorization = require("../middleware/auth");
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv');
-dotenv.config();
 
 const addLike = (req, res) => {
     const {bookId} = req.params;
@@ -56,18 +55,6 @@ const removeLike = (req, res) => {
         }
         return res.status(StatusCodes.OK).json(results);
     });
-}
-
-function ensureAuthorization(req, res) {
-    try {
-        const receivedJwt = req.headers["authorization"];
-        const decodedJwt = jwt.verify(receivedJwt, process.env.PRIVATE_KEY);
-        return decodedJwt;
-    } catch(err) {
-        console.log(err.name);
-        console.log(err.message);
-        return err;
-    }
 }
 
 module.exports = {
