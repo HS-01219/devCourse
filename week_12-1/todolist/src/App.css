@@ -1,9 +1,39 @@
+.delButton {
+  background-color: red;
+  color : white;
+  border : none;
+  border-radius : 5px;
+  padding : 5px;
+  cursor : pointer;
+  margin : 0 20px;
+  text-align: center;
+  font-weight: bold;
+  justify-content: right;
+  font-size : 16px;
+  margin-left : auto;
+}
+
+.board {
+  background-color: aliceblue;
+  border-radius: 8px;
+  box-shadow: 0 2px rgb(0, 0, 0, 0.1);
+  overflow: hidden; 
+  color: black;
+  text-align: left;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding : 10px;
+}
+
 .container {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   background-color: #282c34;
   color: white;
+  text-align: center;
 }
 
 .test {

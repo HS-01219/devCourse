@@ -1,7 +1,21 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import ClassCom from './ClassCom';
+import FuncCom from './FuncCom';
+import TodoList from './Todolist';
+import Clock from './Timer';
 
+function App() {
+  return (
+    <div className="container">
+      <TodoList />
+      <Clock />
+    </div>
+  )
+}
+
+/* react 연습용 코드 주석처리
 function App() {
   // javascript 코드를 작성하는 부분
   let name = "React"; // jsx 내부에서 변수를 사용하기 위해서는 {} 로 감싸줘야 한다.
@@ -19,7 +33,7 @@ function App() {
 
   return (
     <div style = {style}>
-      { /* 외부에서 작성한 객체를 사용하여 스타일링 */ }
+      // 주석 { 외부에서 작성한 객체를 사용하여 스타일링 }
       <h1 style = {
         {
           // 인라인 스타일링 방법 두가지 중 하나,
@@ -36,9 +50,13 @@ function App() {
         // 단축평가를 통해 값이 있는지 없는지 판단하여 출력 가능
         port || "포트가 지정되지 않았습니다."
       }
+      <ClassCom />
+      // 주석 { 외부에서 작성한 컴포넌트 사용 }
+      <FuncCom />
     </div>
   );
 }
+*/
 
 /* 위와 동일한 내용을 출력하는 코드
  * 사용자에게 조금 더 친숙한 형태로 작성된 코드가 jsx 문법이다.
