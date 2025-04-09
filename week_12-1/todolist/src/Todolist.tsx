@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react'; // useState 훅을 사용하기 위해 import
 import { Button } from 'react-bootstrap';
+import TodoModal from './TodoModal';
 
 // 타입스크립트에서 사용하는 타입 정의
 type Todo = {
@@ -8,6 +9,8 @@ type Todo = {
     text : string;
     isChecked : boolean;
 }
+
+
 
 // 타입스크립트 환경에서 함수형 컴포넌트 타입 명시는 React.FC
 const TodoList : React.FC = () => {
@@ -93,6 +96,7 @@ const TodoList : React.FC = () => {
                         }
                     </ul>
                 </div>
+                <TodoModal show={showDetail} todo={selectedTodo} handleClose={handleCloseDetail} />
             </div>
         </div>
     )

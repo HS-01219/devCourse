@@ -5,12 +5,15 @@ import ClassCom from './ClassCom';
 import FuncCom from './FuncCom';
 import TodoList from './Todolist';
 import Clock from './Timer';
+// import MyWeather from './MyWeather';
 
 function App() {
   return (
     <div className="container">
       <TodoList />
       <Clock />
+      {/* <MyWeather weather="맑음" /> props 전달 */}
+      {/* <MyWeather weather="맑음">children</MyWeather> */}
     </div>
   )
 }
