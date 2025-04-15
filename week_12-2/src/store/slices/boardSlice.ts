@@ -36,6 +36,15 @@ type TDeleteBoardAction = {
     boardId : string
 }
 
+type TSortAction = {
+    boardIndex : number;
+    droppableIdStart : string;
+    droppableIdEnd : string;
+    droppableIndexStart : number;
+    droppableIndexEnd : number;
+    draggableId : string;
+}
+
 const initialState : TBoardsState = {
     modalActive : false,
     boardArray : [
@@ -136,11 +145,36 @@ const boardSlice = createSlice({
                     )
                 } : board
             );
-        }
+        },
 
-        
+        sort : (state, {payload} : PayloadAction<TSortAction>) => {
+            // 같은 리스트 내 이동
+            if(payload.droppableIdStart === payload.droppableIdEnd) {
+                const list = state.boardArray[payload.boardIndex].lists.find(list => 
+                    list.listId === payload.droppableIdStart
+                )
+
+                // 배열에서 먼저 지우기
+                const card = list?.tasks.splice(payload.droppableIndexStart, 1);
+                list?.tasks.splice(payload.droppableIndexEnd, 0, ...card!);
+            }
+
+            if(payload.droppableIdStart !== payload.droppableIdEnd) {
+                const listStart = state.boardArray[payload.boardIndex].lists.find(list =>
+                    list.listId === payload.droppableIdStart
+                );
+
+                const card = listStart?.tasks.splice(payload.droppableIndexStart, 1);
+
+                const listEnd = state.boardArray[payload.boardIndex].lists.find(list =>
+                    list.listId === payload.droppableIdEnd
+                );
+
+                listEnd?.tasks.splice(payload.droppableIndexEnd, 0, ...card!);
+            }
+        }
     }
 });
 
-export const { addBoard, deleteList, setModalActive, addList, addTask, updateTask, deleteTask, deleteBoard } = boardSlice.actions;
+export const { addBoard, deleteList, setModalActive, addList, addTask, updateTask, deleteTask, deleteBoard, sort } = boardSlice.actions;
 export const boardsReducer = boardSlice.reducer; // sub reducer, combile 해야 함
