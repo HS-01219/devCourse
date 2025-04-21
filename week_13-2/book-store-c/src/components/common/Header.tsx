@@ -1,40 +1,26 @@
 import { styled } from "styled-components";
 import logo from '../../assets/images/logo.png';
 import { FaSignInAlt, FaRegUser } from "react-icons/fa";
-
-const CATEGORY = [
-    {
-        id : null,
-        name : "전체"
-    },
-    {
-        id : 0,
-        name : "동화"
-    },
-    {
-        id : 1,
-        name : "소설"
-    },
-    {
-        id : 2,
-        name : "사회"
-    },
-];
+import { Link } from "react-router-dom";
+import { Category } from "../../model/category.model";
+import { useCategory } from "../../hooks/useCategory";
 
 function Header() {
+    // const { category } = useCategory();
+    const category : Category[] = [{id : 0, name : ""}];
     return (
         <HeaderStyle>
             <h1 className="logo">
-                <img src={logo} alt="book store" />
+                <Link to="/">
+                    <img src={logo} alt="book store" />
+                </Link>
             </h1>
             <nav className="category">
                 <ul>
                     {
-                        CATEGORY.map((item) => (
+                        category.map((item : Category) => (
                             <li key={item.id}>
-                                <a href={item.id ? `/books?category_id=${item.id}` : `/books`}>
-                                    {item.name}
-                                </a>
+                                <Link to={item.id ? `/books?category_id=${item.id}` : `/books`}>{item.name}</Link>
                             </li>
                         ))
                     }
@@ -43,16 +29,16 @@ function Header() {
             <nav className="auth">
                 <ul>
                     <li>
-                        <a href="/login">
+                        <Link to="/login">
                             <FaSignInAlt />
                             로그인
-                        </a>
+                        </Link>
                     </li>
                     <li>
-                        <a href="/join">
+                        <Link to="/signup">
                             <FaRegUser />
                             회원가입
-                        </a>
+                        </Link>
                     </li>
                 </ul>
             </nav>
