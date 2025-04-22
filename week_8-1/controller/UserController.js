@@ -48,7 +48,7 @@ const login = (req, res) => {
                 res.cookie("token", token, { httpOnly : true, secure : true });
                 console.log(token);
                 
-                return res.status(StatusCodes.OK).json(result);
+                return res.status(StatusCodes.OK).json({...result[0], token : token});
             } else {
                 return res.status(StatusCodes.UNAUTHORIZED).json({ message : `아이디 또는 비밀번호가 일치하지 않습니다.` });
             }

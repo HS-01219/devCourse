@@ -1,3 +1,4 @@
+import { getToken, removeToken } from '../store/authStore';
 import { AxiosInstance } from './../../node_modules/axios/index.d';
 import axios, { AxiosRequestConfig } from "axios";
 
@@ -11,6 +12,7 @@ export const createClient = (config?: AxiosRequestConfig) => {
         timeout : DEFAULT_TIMEOUT,
         headers : {
             "Content-Type" : "application/json",
+            Authorization : getToken() ? getToken() : "",
         },
         withCredentials : true,
         ...config
@@ -19,6 +21,13 @@ export const createClient = (config?: AxiosRequestConfig) => {
     AxiosInstance.interceptors.response.use((response) => {
         return response;
     }, (error) => {
+        // 토큰 만료 시
+        if(error.response.status === 401) {
+            removeToken();
+            window.location.href = "/login";
+            return;
+        }
+
         return Promise.reject(error);
     });
 
