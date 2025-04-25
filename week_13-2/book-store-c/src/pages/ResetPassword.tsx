@@ -11,7 +11,7 @@ import { useState } from 'react';
 
 function ResetPassword() {
     const navigate = useNavigate();
-    const showAlert = useAlert();
+    const {showAlert} = useAlert();
 
     const [resetRequested, setResetRequested] = useState(false);
 
