@@ -1,15 +1,15 @@
-import { styled } from 'styled-components';
-import Title from '../components/common/Title';
-import CartItem from '../components/cart/CartItem';
-import { useCart } from '../hooks/useCart';
 import { useMemo, useState } from 'react';
-import Empty from '../components/common/Empty';
-import { FaShoppingCart } from 'react-icons/fa';
-import CartSummary from '../components/cart/CartSummary';
-import Button from '../components/common/Button';
-import { useAlert } from '../hooks/useAlert';
-import { OrderSheet } from '../model/order.model';
 import { useNavigate } from 'react-router-dom';
+import { FaShoppingCart } from 'react-icons/fa';
+import { styled } from 'styled-components';
+import { OrderSheet } from '@/model/order.model';
+import { useCart } from '@/hooks/useCart';
+import { useAlert } from '@/hooks/useAlert';
+import Title from '@/components/common/Title';
+import CartItem from '@/components/cart/CartItem';
+import Empty from '@/components/common/Empty';
+import CartSummary from '@/components/cart/CartSummary';
+import Button from '@/components/common/Button';
 
 function Cart() {
     const { showAlert, showConfirm } = useAlert();
