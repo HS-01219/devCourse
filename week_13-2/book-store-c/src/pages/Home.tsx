@@ -1,19 +1,25 @@
+import Banner from "@/components/common/banner/Banner";
 import Title from "@/components/common/Title";
+import MainBest from "@/components/home/MainBest";
 import MainNewBooks from "@/components/home/MainNewBooks";
 import MainReview from "@/components/home/MainReview";
 import { useMain } from "@/hooks/useMain";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import styled from "styled-components";
 
 function Home() {
-    const { reviews, newBooks } = useMain();
+    const { reviews, newBooks, bestBooks, banners } = useMain();
+    const { isMobile } = useMediaQuery();
+    
     return (
         <HomeStyle>
             {/* 배너 */}
+            <Banner banners={banners} />
 
             {/* 베스트셀러 */}
             <section className="section">
                 <Title size="large">베스트 셀러</Title>
-
+                <MainBest books={bestBooks} />
             </section>
 
             {/* 신간 */}
@@ -32,7 +38,9 @@ function Home() {
 }
 
 const HomeStyle = styled.div`
-    
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 `;
 
 export default Home;

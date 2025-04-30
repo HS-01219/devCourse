@@ -11,7 +11,6 @@ const mockReviewData : BookReviewItem[] = Array.from({length : 8}).map((_, index
 }));
 
 export const reviewsById = http.get("http://localhost:5000/reviews/:bookId", () => {
-    const data: BookReviewItem[] = [];
     return HttpResponse.json(mockReviewData, {status : 200});
 });
 
