@@ -1,3 +1,12 @@
+---
+name: Custom issue template
+about: 이슈 테이블 입니다
+title: [컨벤션] Title
+labels: ''
+assignees: ''
+
+---
+
 ## 작업 내용
 - [ ] Test1
 - [ ] Test2
