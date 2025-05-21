@@ -1,10 +1,9 @@
 ---
 name: Custom issue template
 about: 이슈 테이블 입니다
-title: [컨벤션] Title
+title: '[컨벤션] TITLE 작성'
 labels: ''
 assignees: ''
-
 ---
 
 ## 작업 내용
